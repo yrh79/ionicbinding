@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { MqttServiceProvider } from '../../providers/mqtt-service/mqtt-service';
 
 @Component({
   selector: 'page-home',
@@ -8,10 +9,25 @@ import { NavController } from 'ionic-angular';
 export class HomePage {
 
   myval;
+  _ngZone: NgZone;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController,
+    private mqttService: MqttServiceProvider,
+    zone: NgZone) {
+    this.mqttService.getConfig();
+    this.mqttService.registerListener((payload, params) => {
+      console.log("onMqttData():" + JSON.stringify(params) + ": " + payload);
+      this._ngZone = zone;
+      zone.run(() => {
+        this.toggleSwitch();
+      });
+    });
+    this.mqttService.connectServer();
 
+    // this.onMqttData = this.onMqttData.bind(this);
+    this.toggleSwitch = this.toggleSwitch.bind(this);
   }
+
 
   onButton() {
     console.log(this.myval);
@@ -25,12 +41,19 @@ export class HomePage {
       return "assets/imgs/power_switch_off.png";
   }
 
-  toggleSwitch(){
+  toggleSwitch() {
+    console.log(this.myval);
+
     if (this.myval === "on") {
       this.myval = "off";
     }
     else
       this.myval = "on";
   }
+
+  // onMqttData(payload, params) {
+  //   console.log("onMqttData():" + JSON.stringify(params) + ": " + payload);
+  //   this.toggleSwitch();
+  // }
 
 }
