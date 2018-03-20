@@ -13,9 +13,24 @@ export class HomePage {
 
   }
 
-  onButton()
-  {
+  onButton() {
     console.log(this.myval);
+  }
+
+  get imgUrl() {
+    if (this.myval === "on") {
+      return "assets/imgs/power_switch_on.png";
+    }
+    else
+      return "assets/imgs/power_switch_off.png";
+  }
+
+  toggleSwitch(){
+    if (this.myval === "on") {
+      this.myval = "off";
+    }
+    else
+      this.myval = "on";
   }
 
 }

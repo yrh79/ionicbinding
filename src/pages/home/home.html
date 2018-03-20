@@ -18,7 +18,9 @@
     <ion-input [(ngModel)]="myval"></ion-input>
   </ion-item>
 
-  <ion-label>you entered {{myval}}</ion-label>
+  <ion-label>you entered {{imgUrl}}</ion-label>
+
+  <img src="{{imgUrl}}" (click)="toggleSwitch()"/>
 
 <button ion-button icon-start block (click)="onButton()">
   <ion-icon name='people'></ion-icon>
